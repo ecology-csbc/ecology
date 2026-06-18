@@ -307,74 +307,64 @@ Audit done.
 2026-04-12 11:24:03.443  INFO 13732 --- [nio-8081-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:9}] to localhost:27017
 ```
 
-## Тестування
+## CI (GitHub Actions)
+
+Файл workflow: `.github/workflows/ci.yml`
+
+CI-pipeline запускається автоматично для:
+1. Pull request (`opened`, `synchronize`, `reopened`) у гілки `main` та `release/*`
+2. Push у гілки `main` та `release/*`
+
+Етапи pipeline:
+1. `static-analysis`:
+- Запускає Checkstyle (`mvn -B -DskipTests checkstyle:check`)
+- Завершує CI з помилкою, якщо правила порушено
+2. `unit-tests`:
+- Запускає `mvn -B -Dcheckstyle.skip=true -DskipIntegrationTests=true test`
+- Публікує `Surefire`-звіти та артефакти покриття unit-тестів
+- Додає в `GITHUB_STEP_SUMMARY` підсумок line coverage для unit-тестів
+3. `integration-tests`:
+- Запускає `mvn -B -Dcheckstyle.skip=true -DskipUnitTests=true verify`
+- Піднімає ізольований MongoDB через Testcontainers
+- Публікує `Failsafe`-звіти та артефакти покриття integration-тестів
+- Додає в `GITHUB_STEP_SUMMARY` окремий підсумок line coverage для `com.college.Schedule`
+- Додає в `GITHUB_STEP_SUMMARY` окремий підсумок line coverage для `com.college.ScheduleController`
+4. `build`:
+- Запускає `mvn -B -DskipUnitTests=true -DskipIntegrationTests=true package`
+- Створює JAR після успішного проходження unit та integration тестів
+5. `publish`:
+- Використовує reusable workflow `.github/workflows/maven-publish.yml`
+- Запускається лише після успішного завершення етапу `build`
+
+Артефакти та звіти:
+1. Артефакт збірки: `target/*.jar`
+2. Звіти тестів: `target/surefire-reports/**`
+3. Звіти integration-тестів: `target/failsafe-reports/**`
+4. Звіти unit test coverage: `target/site/jacoco/**`, `target/jacoco.exec`
+5. Звіти integration test coverage: `target/site/jacoco-integration-tests/**`, `target/jacoco-integration-tests.exec`
+6. При падінні static analysis workflow завантажує логи: `target/ci-logs/**`
+7. При падінні unit-тестів workflow завантажує логи: `target/ci-logs/**`
+8. При падінні integration-тестів workflow завантажує логи `target/ci-logs/**` і додатково звіти `target/failsafe-reports/**` та `target/site/jacoco-integration-tests/**`
+
+## Тестування та покриття
 
 Поточний стан:
-1. Unit-тести написані на **JUnit 5** і запускаються через **Surefire**.
+1. Unit-тести написані на **JUnit 5**.
 2. Integration-тести запускаються через **Failsafe** і використовують **Testcontainers MongoDB**.
-3. E2E UI-тести написані на **Playwright for Java** у класі `src/test/java/com/college/ScheduleHappyPathE2ETests.java`.
-4. Для покриття використовується **JaCoCo**.
-5. У `pom.xml` налаштовано мінімальне покриття **75% line coverage** для unit-тестів і **100% line coverage** для інтеграційних тестів для `com.college.Schedule` та `com.college.ScheduleController`.
+3. Для покриття використовується **JaCoCo**.
+4. У `pom.xml` налаштовано мінімальне покриття **75% line coverage** для unit-тестів (перевірка на етапі `package`) і **100% line coverage** для інтеграційних тестів для класів `com.college.Schedule` та `com.college.ScheduleController` (перевірка на етапі `verify`).
 
 Локальний запуск:
 1. Тільки unit-тести:
 `mvn test`
 2. Тільки integration-тести:
 `mvn -DskipUnitTests=true verify`
-3. Тільки E2E UI-тести проти вже розгорнутого середовища:
-`mvn -B -P e2e-ui '-Dcheckstyle.skip=true' '-DskipUnitTests=true' '-DskipIntegrationTests=true' '-De2e.base-url=https://your-app.onrender.com' verify`
-4. Повна перевірка:
+3. Повна перевірка (unit + integration + JaCoCo):
 `mvn verify`
 
 Звіти:
-1. Unit test reports: `target/surefire-reports/`
-2. Integration and E2E test reports: `target/failsafe-reports/`
-3. E2E media: `target/e2e-artifacts/videos/`, `target/e2e-artifacts/screenshots/`
-4. Unit coverage: `target/site/jacoco/`
-5. Integration coverage: `target/site/jacoco-integration-tests/`
-
-## E2E UI тести
-
-Конфігурація:
-1. URL розгорнутого застосунку передається через JVM property `e2e.base-url` або змінну середовища `E2E_BASE_URL`.
-2. Якщо URL не передано, тести завершуються зі статусом **skipped** без падіння збірки.
-3. Для запуску через Selenium Grid Playwright може під'єднатися до Chromium CDP endpoint, переданого через `e2e.selenium-cdp-url` або `E2E_SELENIUM_CDP_URL`.
-4. Відео проходження тестів записується в `target/e2e-artifacts/videos/`.
-5. При падінні тесту screenshot записується в `target/e2e-artifacts/screenshots/`.
-
-Локальний запуск проти Render або іншого deployed URL в PowerShell:
-```powershell
-$env:E2E_BASE_URL="https://your-app.onrender.com"
-mvn -B -P e2e-ui `
-  '-Dcheckstyle.skip=true' `
-  '-DskipUnitTests=true' `
-  '-DskipIntegrationTests=true' `
-  verify
-```
-
-## CI (GitHub Actions)
-
-Основний workflow: `.github/workflows/ci.yml`
-
-CI запускається автоматично для:
-1. Pull request (`opened`, `synchronize`, `reopened`) у гілки `main` та `release/*`
-2. Push у гілки `main` та `release/*`
-
-Актуальна послідовність job:
-1. `static-analysis`
-2. `unit-tests`
-3. `integration-tests`
-4. `build`
-5. `publish`
-6. `publish-docker`
-7. `deploy-render-pr` для pull request
-8. `e2e-ui-tests` для pull request після успішного `build`, тимчасово проти `https://college-schedule-app-0-3-0.onrender.com`
-
-Пов'язані workflow:
-1. `.github/workflows/run-e2e-test.yml` приймає `application_url`, піднімає `selenium/standalone-chromium:latest` як service container, викликає `workflows/scripts/run-e2e-test.sh` і завантажує artifacts
-2. `workflows/scripts/run-e2e-test.sh` створює Selenium session, налаштовує CDP URL для Playwright і запускає `mvn -P e2e-ui` на GitHub runner
-3. У `CI` workflow job `e2e-ui-tests` тимчасово використовує фіксований URL `https://college-schedule-app-0-3-0.onrender.com`
-
-GitHub Actions:
-1. `run-e2e-test` також підтримує ручний запуск через `workflow_dispatch` з обов'язковим параметром `application_url`
-2. E2E workflow завантажує screenshots, відео, `failsafe`-звіти та логи як pipeline artifacts
+1. JUnit/Surefire: `target/surefire-reports/`
+2. JUnit/Failsafe: `target/failsafe-reports/`
+3. Unit JaCoCo HTML: `target/site/jacoco/index.html`
+4. Integration JaCoCo HTML: `target/site/jacoco-integration-tests/index.html`
+5. Unit JaCoCo CSV: `target/site/jacoco/jacoco.csv`
