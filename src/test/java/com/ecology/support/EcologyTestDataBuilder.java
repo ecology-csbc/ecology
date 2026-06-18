@@ -1,8 +1,8 @@
-package com.college.support;
+package com.ecology.support;
 
-import com.college.Schedule;
+import com.ecology.Ecology;
 
-public final class ScheduleTestDataBuilder {
+public final class EcologyTestDataBuilder {
     private String studentFirstName = "Аліса";
     private String studentLastName = "Мельник";
     private String teacherFirstName = "Іван";
@@ -15,22 +15,22 @@ public final class ScheduleTestDataBuilder {
     private String startTime = "09:00:00";
     private String endTime = "10:30:00";
 
-    public static ScheduleTestDataBuilder aSchedule() {
-        return new ScheduleTestDataBuilder();
+    public static EcologyTestDataBuilder anEcology() {
+        return new EcologyTestDataBuilder();
     }
 
-    public ScheduleTestDataBuilder withStudentFirstName(String value) {
+    public EcologyTestDataBuilder withStudentFirstName(String value) {
         this.studentFirstName = value;
         return this;
     }
 
-    public ScheduleTestDataBuilder withCourseName(String value) {
+    public EcologyTestDataBuilder withCourseName(String value) {
         this.courseName = value;
         return this;
     }
 
-    public Schedule build() {
-        return new Schedule(
+    public Ecology build() {
+        return new Ecology(
             studentFirstName,
             studentLastName,
             teacherFirstName,

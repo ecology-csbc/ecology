@@ -1,13 +1,13 @@
-package com.college;
+package com.ecology;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /* 
-  Колекція, в якій зберігається документ баз даних MongoDB, що представляє сутність рядку з таблиці з розкладом коледжу.
+  Колекція, в якій зберігається документ баз даних MongoDB, що представляє запис екології.
 */
-@Document(collection = "college-schedule")
-public class Schedule {
+@Document(collection = "ecology")
+public class Ecology {
     @Id
     private String id;
     private String studentFirstName;
@@ -22,7 +22,7 @@ public class Schedule {
     private String startTime;
     private String endTime;
 
-    public Schedule(
+    public Ecology(
         String studentFirstName,
         String studentLastName,
         String teacherFirstName,
@@ -48,7 +48,7 @@ public class Schedule {
         this.endTime = endTime;
     }
 
-    public Schedule() {
+    public Ecology() {
     }
 
     public String getId() {
@@ -144,7 +144,7 @@ public class Schedule {
     }
 
     public String toString() {
-        return "Schedule {" +
+        return "Ecology {" +
                 " id=\"" + id + "\"\n" +
                 " studentFirstName=\"" + studentFirstName + "\"\n" +
                 " studentLastName=\"" + studentLastName + "\"\n" +

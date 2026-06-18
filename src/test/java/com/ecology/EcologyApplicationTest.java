@@ -1,4 +1,4 @@
-package com.college;
+package com.ecology;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-class CollegeApplicationTest {
+class EcologyApplicationTest {
     private final OutputStreamState outputStreamState = new OutputStreamState();
 
     @AfterEach
@@ -24,53 +24,53 @@ class CollegeApplicationTest {
     }
 
     @Test
-    void viewAllSchedulesPrintsNotFoundForEmptyRepository() throws Exception {
-        ScheduleRepository repository = mock(ScheduleRepository.class);
+    void viewAllEcologiesPrintsNotFoundForEmptyRepository() throws Exception {
+        EcologyRepository repository = mock(EcologyRepository.class);
         when(repository.findAll()).thenReturn(Collections.emptyList());
-        CollegeApplication app = appWithRepository(repository);
+        EcologyApplication app = appWithRepository(repository);
 
-        invokePrivate(app, "viewAllSchedules");
+        invokePrivate(app, "viewAllEcologies");
 
         assertTrue(outputStreamState.value().contains("не знайдено"));
         verify(repository, times(1)).findAll();
     }
 
     @Test
-    void viewAllSchedulesPrintsRowsWhenRepositoryHasData() throws Exception {
-        ScheduleRepository repository = mock(ScheduleRepository.class);
-        Schedule schedule = new com.college.support.ScheduleTestDataBuilder().build();
-        when(repository.findAll()).thenReturn(List.of(schedule));
-        CollegeApplication app = appWithRepository(repository);
+    void viewAllEcologiesPrintsRowsWhenRepositoryHasData() throws Exception {
+        EcologyRepository repository = mock(EcologyRepository.class);
+        Ecology ecology = new com.ecology.support.EcologyTestDataBuilder().build();
+        when(repository.findAll()).thenReturn(List.of(ecology));
+        EcologyApplication app = appWithRepository(repository);
 
-        invokePrivate(app, "viewAllSchedules");
+        invokePrivate(app, "viewAllEcologies");
 
         String output = outputStreamState.value();
         assertTrue(output.contains("Знайдено 1"));
-        assertTrue(output.contains("Schedule {"));
+        assertTrue(output.contains("Ecology {"));
         verify(repository, times(1)).findAll();
     }
 
     @Test
-    void dropAllSchedulesDeletesDataAndPrintsMessage() throws Exception {
-        ScheduleRepository repository = mock(ScheduleRepository.class);
-        CollegeApplication app = appWithRepository(repository);
+    void dropAllEcologiesDeletesDataAndPrintsMessage() throws Exception {
+        EcologyRepository repository = mock(EcologyRepository.class);
+        EcologyApplication app = appWithRepository(repository);
 
-        invokePrivate(app, "dropAllSchedules");
+        invokePrivate(app, "dropAllEcologies");
 
         verify(repository, times(1)).deleteAll();
         assertTrue(outputStreamState.value().contains("видалено"));
     }
 
-    private static CollegeApplication appWithRepository(ScheduleRepository repository) throws Exception {
-        CollegeApplication app = new CollegeApplication();
-        Field field = CollegeApplication.class.getDeclaredField("scheduleRepository");
+    private static EcologyApplication appWithRepository(EcologyRepository repository) throws Exception {
+        EcologyApplication app = new EcologyApplication();
+        Field field = EcologyApplication.class.getDeclaredField("ecologyRepository");
         field.setAccessible(true);
         field.set(app, repository);
         return app;
     }
 
-    private static void invokePrivate(CollegeApplication app, String methodName) throws Exception {
-        Method method = CollegeApplication.class.getDeclaredMethod(methodName);
+    private static void invokePrivate(EcologyApplication app, String methodName) throws Exception {
+        Method method = EcologyApplication.class.getDeclaredMethod(methodName);
         method.setAccessible(true);
         method.invoke(app);
     }
