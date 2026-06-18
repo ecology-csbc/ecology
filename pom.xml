@@ -1,18 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.college</groupId>
-  <artifactId>college-schedule-25</artifactId>
+  <groupId>com.ecology</groupId>
+  <artifactId>ecology</artifactId>
   <packaging>jar</packaging>
   <version>0.3.0-SNAPSHOT</version>
-  <name>college-sample</name>
+  <name>ecology-app</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <!-- Кодування збірки та ресурсів -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
     <project.scm.id>github</project.scm.id>
     <testcontainers.version>1.21.4</testcontainers.version>
     <skipUnitTests>false</skipUnitTests>
@@ -21,9 +20,9 @@
 
   <!-- Інформація про SCM -->
   <scm>
-    <connection>scm:git:https://github.com/chdbc-samples/college-schedule-app-25.git</connection>
-    <developerConnection>scm:git:https://github.com/chdbc-samples/college-schedule-app-25.git</developerConnection>
-    <url>https://github.com/chdbc-samples/college-schedule-app-25</url>
+    <connection>scm:git:https://github.com/ecology-csbc/ecology.git</connection>
+    <developerConnection>scm:git:https://github.com/ecology-csbc/ecology.git</developerConnection>
+    <url>https://github.com/ecology-csbc/ecology</url>
     <tag>HEAD</tag>
   </scm>
   
@@ -57,9 +56,20 @@
         <scope>test</scope>
     </dependency>
     <dependency>
+          <groupId>com.opencsv</groupId>
+          <artifactId>opencsv</artifactId>
+          <version>5.9</version>
+    </dependency>
+    <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>mongodb</artifactId>
         <version>${testcontainers.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.microsoft.playwright</groupId>
+        <artifactId>playwright</artifactId>
+        <version>1.46.0</version>
         <scope>test</scope>
     </dependency>
 
@@ -69,7 +79,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/chdbc-samples/college-schedule-app-25</url>
+      <url>https://maven.pkg.github.com/ecology-csbc/ecology</url>
     </repository>
   </distributionManagement>
 
@@ -110,7 +120,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.5.0</version>
         <configuration>
-          <mainClass>com.college.CollegeApplication</mainClass>
+          <mainClass>com.ecology.EcologyApplication</mainClass>
         </configuration>
       </plugin>
 
@@ -124,6 +134,7 @@
           <skipTests>${skipUnitTests}</skipTests>
           <excludes>
             <exclude>**/*IntegrationTests.java</exclude>
+            <exclude>**/*E2ETests.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -155,7 +166,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
+        <version>0.8.15</version>
         <executions>
           <!-- Підготовка агента JaCoCo для юніт-тестів. -->
           <execution>
@@ -245,7 +256,7 @@
                 <rule>
                   <element>CLASS</element>
                   <includes>
-                    <include>com.college.Schedule</include>
+                    <include>com.ecology.Ecology</include>
                   </includes>
                   <limits>
                     <limit>
@@ -258,7 +269,7 @@
                 <rule>
                   <element>CLASS</element>
                   <includes>
-                    <include>com.college.ScheduleController</include>
+                    <include>com.ecology.EcologyController</include>
                   </includes>
                   <limits>
                     <limit>
