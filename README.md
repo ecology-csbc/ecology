@@ -1,55 +1,104 @@
-﻿# Приклад Java-програми ведення екологічних записів з використанням СКБД MongoDB
-## Кроки для виконання
-1. Завантажте і встановіть Java Development Kit 17 (або новішу версію) для Windows.
-1. Завантажте Maven з https://dlcdn.apache.org/maven/maven-3/3.8.9/binaries/apache-maven-3.8.9-bin.zip і розпакуйте його на локальний комп'ютер.
-1. В Windows в параметрах системи додайте системну змінну MAVEN_HOME=<шлях до папки з Maven>
-1. В Windows в параметрах системи додайте `;<шлях до папки з Maven>\bin` в системну змінну PATH.
-1. Встановіть СКБД MongoDB Community Server вибрати варіант установки Complete -> "Run service as Network Service user"
-1. Встановіть MongoDB Compass (GUI).
-1. Створіть базу даних `ecology-db` і колекцію в ній `ecology`.
-1. Зберіть програму використовуючи команду `mvn clean install`.
-1. Запустіть програму за допомогою команди `mvn spring-boot:run`.
-1. Відкрийте веб-браузер і перейдіть за адресою `http://localhost:8081` для перегляду записів.
+﻿# Java-програма для управління екологічним моніторингом з використанням MongoDB
+
+Веб-додаток для обліку та управління екологічними вимірюваннями, включаючи дані про якість повітря (PM2.5, NO2), pH води та інші екологічні параметри з координатами локацій.
+
+## Вимоги
+
+- Java Development Kit 17 або новіша версія
+- Maven 3.8.9 або новіша версія
+- MongoDB Community Server або MongoDB Atlas
+- MongoDB Compass (GUI) — опціонально
+
+## Установка та запуск
+
+### Локальна установка з MongoDB
+
+1. Завантажте і встановіть Java Development Kit 17 (або новішу версію).
+1. Завантажте Maven з https://dlcdn.apache.org/maven/maven-3/3.8.9/binaries/apache-maven-3.8.9-bin.zip
+1. Встановіть СКБД MongoDB Community Server з опцією "Run service as Network Service user"
+1. Встановіть MongoDB Compass (GUI) для керування базою даних.
+1. Створіть базу даних `ecology-db` і колекцію `ecology` у MongoDB Compass.
+1. Зберіть програму командою `mvn clean install`
+1. Запустіть програму командою `mvn spring-boot:run`
+1. Відкрийте веб-браузер і перейдіть за адресою `http://localhost:8081`
 
 ## Веб-інтерфейс
 
-Після запуску програми веб-інтерфейс доступний у браузері за адресою `http://localhost:8081`.
+Після запуску програми веб-інтерфейс доступний за адресою `http://localhost:8081`.
 
-Сторінки:
-1. **Головна сторінка** (`http://localhost:8081`) — відображає розклад екологічних записів у вигляді таблиці з усіма колонками.
-1. **Додати запис** (`http://localhost:8081/add`) — форма для додавання нового рядка до записів.
+### Функціональність
+
+- **Головна сторінка** (`http://localhost:8081`) — таблиця всіх екологічних записів з параметрами:
+  - ПІБ еколога та його стаж
+  - ID датчика та дата вимірювання
+  - Параметри: PM2.5, NO2, pH
+  - Рівень небезпеки (Низький, Середній, Високий)
+  - Координати локації (широта, довгота)
+  - Назва органу влади та контактна інформація
+  
+- **Додати запис** (`http://localhost:8081/add`) — форма для внесення нового екологічного вимірювання
+
+## Структура даних
+
+### Поля екологічного запису
+
+```json
+{
+  "ecologistName": "ПІБ еколога",
+  "ecologistExperience": 6,
+  "sensorId": "S-101",
+  "measurementDate": "2024-09-14",
+  "paramPm25": 18.0,
+  "paramNo2": 32.0,
+  "paramPh": 7.1,
+  "dangerLevel": "Низький",
+  "latitude": 50.4501,
+  "longitude": 30.5234,
+  "authorityName": "Київська МДА",
+  "authorityAddress": "м. Київ, вул. Хрещатик, 36",
+  "authorityPhone": "380444670001"
+}
+```
+
+## Завантаження даних з CSV
+
+Програма підтримує завантаження екологічних записів з CSV файлу `Ecology.csv` із такою структурою колонок:
+
+```
+Еколог,Датчик ID,Дата вимірювання,Параметри,Рівень небезпеки,Координати локації,Орган місцевої влади,Адреса органу,Телефон органу,Стаж еколога
+```
 
 ## Docker
 
-Локальне збирання образу Docker-контейнера:
+### Локальна збірка та запуск
 
+Збирання образу:
 ```bash
 docker build -f deploy/Dockerfile -t ecology .
 ```
 
-Локальний запуск образу Docker-контейнера:
-
+Запуск контейнера:
 ```bash
 docker run --rm -p 8081:8081 -e MONGO_URI=mongodb://host.docker.internal:27017/ecology-db ecology
 ```
 
-Після запуску застосунок буде доступний за адресою `http://localhost:8081`.
+Застосунок буде доступний за адресою `http://localhost:8081`
 
-Для збірки з основної гілки як тег образу Docker-контейнера використовується значення `version` з `pom.xml`, наприклад `0.3.0-snapshot`.
-Тег `latest` публікується лише тоді, коли значення `version` у `pom.xml` не містить `SNAPSHOT`.
+### Запуск образу з GitHub Packages
 
-
-Перед тим, як завантажити образ, потрібно залогінитись в GitHub Package використовуючи свій GitHub-токен. Цей токен повинен мати дозвіл `read:packages`, бути створеним для того самого користувача GitHub, ім'я якого вказано в команді `docker login`, і цей користувач повинен мати принаймні read-доступ до пакета.
+Перед запуском залогініться в GitHub Package:
 
 ```cmd
 set GITHUB_TOKEN=your-github-token
 echo %GITHUB_TOKEN% | docker login ghcr.io -u your-github-username --password-stdin
+```
 
+Завантаження образу:
+```bash
 docker pull ghcr.io/ecology-csbc/ecology:0.3.0-snapshot
 ```
 
-Запуск контейнера з образу Docker-контейнера, опублікованого у GitHub Packages:
-
+Запуск:
 ```bash
 docker run --rm -p 8081:8081 -e MONGO_URI=mongodb://host.docker.internal:27017/ecology-db ghcr.io/ecology-csbc/ecology:0.3.0-snapshot
 ```
@@ -58,44 +107,51 @@ docker run --rm -p 8081:8081 -e MONGO_URI=mongodb://host.docker.internal:27017/e
 
 За замовчуванням програма використовує адресу `mongodb://localhost:27017/ecology-db` для підключення до локальної бази даних.
 
-
 ### Підключення до MongoDB Atlas
 
-Для підключення MongoDB Atlas потрібно записати connection string кластера в змінну середовища `MONGO_URI` наприклад:
+1. Створіть кластер у MongoDB Atlas (Free tier).
+1. Створіть користувача бази даних у розділі Database Access.
+1. Скопіюйте connection string з кнопки Connect → Drivers.
+1. Створіть базу даних `ecology-db` та колекцію `ecology`.
+1. Додайте вашу IP-адресу в Network Access.
+1. Встановіть змінну середовища `MONGO_URI`.
 
+Приклад connection string:
 ```text
 mongodb+srv://<db-username>:<db-password>@<cluster-url>/ecology-db?retryWrites=true&w=majority
 ```
 
-Порядок налаштування:
-1. Створіть кластер у MongoDB Atlas (тариф Free).
-1. Створіть користувача бази даних у розділі Database Access і збережіть пароль.
-1. Скопіюйте connection string з кнопки Connect -> Drivers і збережіть його.
-1. Створіть базу даних `ecology-db` і колекцію `ecology` в розділі Data Explorer.
-1. Підставте в URI свої `username`, `password` і назву бази даних `ecology-db` та збережіть у змінній середовища `MONGO_URI`.
-1. Визначте зовнішню IP-адресу (`curl -s https://api.ipify.org && echo`) і додайте її в Network Access.
-
-Приклад запуску з MongoDB Atlas.
-
-Windows Command Prompt:
+#### Windows Command Prompt
 
 ```cmd
 set MONGO_URI=mongodb+srv://db-username:db-password@cluster0.abcde.mongodb.net/ecology-db?retryWrites=true^&w=majority
 mvn spring-boot:run
 ```
 
-PowerShell:
+#### PowerShell
 
 ```powershell
 $env:MONGO_URI="mongodb+srv://db-username:db-password@cluster0.abcde.mongodb.net/ecology-db?retryWrites=true&w=majority"
 mvn spring-boot:run
 ```
 
-Linux/macOS:
+#### Linux/macOS
 
 ```bash
 export MONGO_URI="mongodb+srv://db-username:db-password@cluster0.abcde.mongodb.net/ecology-db?retryWrites=true&w=majority"
 mvn spring-boot:run
+```
+
+## Тестування
+
+Запуск юніт-тестів:
+```bash
+mvn clean test
+```
+
+Запуск з перевіркою якості коду (Checkstyle, JaCoCo):
+```bash
+mvn clean verify
 ```
 
 Примітка: якщо пароль містить спеціальні символи, їх потрібно URL-кодувати в connection string. Наприклад, символ `@` потрібно замінити на `%40`.

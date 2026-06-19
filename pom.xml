@@ -4,7 +4,7 @@
   <artifactId>ecology</artifactId>
   <packaging>jar</packaging>
   <version>0.3.0-SNAPSHOT</version>
-  <name>ecology-app</name>
+  <name>ecology</name>
   <url>http://maven.apache.org</url>
 
   <properties>
