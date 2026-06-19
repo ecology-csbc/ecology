@@ -10,42 +10,48 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ecology {
     @Id
     private String id;
-    private String studentFirstName;
-    private String studentLastName;
-    private String teacherFirstName;
-    private String teacherLastName;
-    private String courseName;
-    private String departmentName;
-    private String roomNumber;
-    private String semester;
-    private String year;
-    private String startTime;
-    private String endTime;
+    private String ecologistName;
+    private String sensorId;
+    private String measurementDate;
+    private Double paramPm25;
+    private Double paramNo2;
+    private Double paramPh;
+    private String dangerLevel;
+    private Double latitude;
+    private Double longitude;
+    private String authorityName;
+    private String authorityAddress;
+    private String authorityPhone;
+    private Integer ecologistExperience;
 
     public Ecology(
-        String studentFirstName,
-        String studentLastName,
-        String teacherFirstName,
-        String teacherLastName,
-        String courseName,
-        String departmentName,
-        String roomNumber,
-        String semester,
-        String year,
-        String startTime,
-        String endTime
+        String ecologistName,
+        String sensorId,
+        String measurementDate,
+        Double paramPm25,
+        Double paramNo2,
+        Double paramPh,
+        String dangerLevel,
+        Double latitude,
+        Double longitude,
+        String authorityName,
+        String authorityAddress,
+        String authorityPhone,
+        Integer ecologistExperience
     ) {
-        this.studentFirstName = studentFirstName;
-        this.studentLastName = studentLastName;
-        this.teacherFirstName = teacherFirstName;
-        this.teacherLastName = teacherLastName;
-        this.courseName = courseName;
-        this.departmentName = departmentName;
-        this.roomNumber = roomNumber;
-        this.semester = semester;
-        this.year = year;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.ecologistName = ecologistName;
+        this.sensorId = sensorId;
+        this.measurementDate = measurementDate;
+        this.paramPm25 = paramPm25;
+        this.paramNo2 = paramNo2;
+        this.paramPh = paramPh;
+        this.dangerLevel = dangerLevel;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.authorityName = authorityName;
+        this.authorityAddress = authorityAddress;
+        this.authorityPhone = authorityPhone;
+        this.ecologistExperience = ecologistExperience;
     }
 
     public Ecology() {
@@ -55,108 +61,126 @@ public class Ecology {
         return id;
     }
 
-    public String getStudentFirstName() {
-        return studentFirstName;
+    public String getEcologistName() {
+        return ecologistName;
     }
 
-    public void setStudentFirstName(String studentFirstName) {
-        this.studentFirstName = studentFirstName;
+    public void setEcologistName(String ecologistName) {
+        this.ecologistName = ecologistName;
     }
 
-    public String getStudentLastName() {
-        return studentLastName;
+    public String getSensorId() {
+        return sensorId;
     }
 
-    public void setStudentLastName(String studentLastName) {
-        this.studentLastName = studentLastName;
+    public void setSensorId(String sensorId) {
+        this.sensorId = sensorId;
     }
 
-    public String getTeacherFirstName() {
-        return teacherFirstName;
+    public String getMeasurementDate() {
+        return measurementDate;
     }
 
-    public void setTeacherFirstName(String teacherFirstName) {
-        this.teacherFirstName = teacherFirstName;
+    public void setMeasurementDate(String measurementDate) {
+        this.measurementDate = measurementDate;
     }
 
-    public String getTeacherLastName() {
-        return teacherLastName;
+    public Double getParamPm25() {
+        return paramPm25;
     }
 
-    public void setTeacherLastName(String teacherLastName) {
-        this.teacherLastName = teacherLastName;
+    public void setParamPm25(Double paramPm25) {
+        this.paramPm25 = paramPm25;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public Double getParamNo2() {
+        return paramNo2;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setParamNo2(Double paramNo2) {
+        this.paramNo2 = paramNo2;
     }
 
-    public String getDepartmentName() {
-        return departmentName;
+    public Double getParamPh() {
+        return paramPh;
     }
 
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
+    public void setParamPh(Double paramPh) {
+        this.paramPh = paramPh;
     }
 
-    public String getRoomNumber() {
-        return roomNumber;
+    public String getDangerLevel() {
+        return dangerLevel;
     }
 
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
+    public void setDangerLevel(String dangerLevel) {
+        this.dangerLevel = dangerLevel;
     }
 
-    public String getSemester() {
-        return semester;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setSemester(String semester) {
-        this.semester = semester;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getYear() {
-        return year;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getAuthorityName() {
+        return authorityName;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setAuthorityName(String authorityName) {
+        this.authorityName = authorityName;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getAuthorityAddress() {
+        return authorityAddress;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setAuthorityAddress(String authorityAddress) {
+        this.authorityAddress = authorityAddress;
+    }
+
+    public String getAuthorityPhone() {
+        return authorityPhone;
+    }
+
+    public void setAuthorityPhone(String authorityPhone) {
+        this.authorityPhone = authorityPhone;
+    }
+
+    public Integer getEcologistExperience() {
+        return ecologistExperience;
+    }
+
+    public void setEcologistExperience(Integer ecologistExperience) {
+        this.ecologistExperience = ecologistExperience;
     }
 
     public String toString() {
         return "Ecology {" +
                 " id=\"" + id + "\"\n" +
-                " studentFirstName=\"" + studentFirstName + "\"\n" +
-                " studentLastName=\"" + studentLastName + "\"\n" +
-                " teacherFirstName=\"" + teacherFirstName + "\"\n" +
-                " teacherLastName=\"" + teacherLastName + "\"\n" +
-                " courseName=\"" + courseName + "\"\n" +
-                " departmentName=\"" + departmentName + "\"\n" +
-                " roomNumber=\"" + roomNumber + "\"\n" +
-                " semester=\"" + semester + "\"\n" +
-                " year=\"" + year + "\"\n" +
-                " startTime=\"" + startTime + "\"\n" +
-                " endTime=\"" + endTime + "\"\n" +
+                " ecologistName=\"" + ecologistName + "\"\n" +
+                " sensorId=\"" + sensorId + "\"\n" +
+                " measurementDate=\"" + measurementDate + "\"\n" +
+                " paramPm25=" + paramPm25 + "\n" +
+                " paramNo2=" + paramNo2 + "\n" +
+                " paramPh=" + paramPh + "\n" +
+                " dangerLevel=\"" + dangerLevel + "\"\n" +
+                " latitude=" + latitude + "\n" +
+                " longitude=" + longitude + "\n" +
+                " authorityName=\"" + authorityName + "\"\n" +
+                " authorityAddress=\"" + authorityAddress + "\"\n" +
+                " authorityPhone=\"" + authorityPhone + "\"\n" +
+                " ecologistExperience=" + ecologistExperience + "\n" +
                 "}";
     }
 }

@@ -82,13 +82,15 @@ public class EcologyApplication implements CommandLineRunner {
 
     private void addEcologiesFromCsv() {
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Ecology.csv");
+            InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("Ecology.csv");
             if (inputStream == null) {
                 System.out.println("Файл Ecology.csv не знайдено в ресурсах.");
                 return;
             }
 
-            try (CSVReader reader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            try (CSVReader reader = new CSVReader(new InputStreamReader(inputStream,
+                    StandardCharsets.UTF_8))) {
                 List<String[]> records = reader.readAll();
                 if (!records.isEmpty()) {
                     records.remove(0);
@@ -96,33 +98,64 @@ public class EcologyApplication implements CommandLineRunner {
 
                 List<Ecology> ecologyList = new ArrayList<>();
                 for (String[] record : records) {
-                    if (record.length < 11) {
+                    if (record.length < 13) {
                         continue;
                     }
-                    Ecology ecology = new Ecology(
-                        record[0],
-                        record[1],
-                        record[2],
-                        record[3],
-                        record[4],
-                        record[5],
-                        record[6],
-                        record[7],
-                        record[8],
-                        record[9],
-                        record[10]
-                    );
-                    ecologyList.add(ecology);
+                    try {
+                        Double pm25 = parseDoubleOrNull(record[3]);
+                        Double no2 = parseDoubleOrNull(record[4]);
+                        Double ph = parseDoubleOrNull(record[5]);
+                        Double lat = parseDoubleOrNull(record[7]);
+                        Double lon = parseDoubleOrNull(record[8]);
+                        Integer exp = parseIntegerOrNull(record[12]);
+
+                        Ecology ecology = new Ecology(
+                            record[0],          // ecologistName
+                            record[1],          // sensorId
+                            record[2],          // measurementDate
+                            pm25,               // paramPm25
+                            no2,                // paramNo2
+                            ph,                 // paramPh
+                            record[6],          // dangerLevel
+                            lat,                // latitude
+                            lon,                // longitude
+                            record[9],          // authorityName
+                            record[10],         // authorityAddress
+                            record[11],         // authorityPhone
+                            exp                 // ecologistExperience
+                        );
+                        ecologyList.add(ecology);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Помилка при розборі числових даних у рядку: "
+                            + String.join(",", record));
+                    }
                 }
 
                 ecologyRepository.deleteAll();
                 ecologyRepository.saveAll(ecologyList);
-                System.out.println(ecologyList.size() + " екологічних записів завантажено з CSV.");
+                System.out.println(ecologyList.size()
+                    + " екологічних записів завантажено з CSV.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Не вдалося завантажити екологічні записи з CSV.");
+            System.out.println(
+                "Не вдалося завантажити екологічні записи з CSV.");
         }
+    }
+
+    private Double parseDoubleOrNull(String value) {
+        if (value != null && !value.isEmpty() && !value.equals("null")
+                && !value.equals("—")) {
+            return Double.parseDouble(value);
+        }
+        return null;
+    }
+
+    private Integer parseIntegerOrNull(String value) {
+        if (value != null && !value.isEmpty() && !value.equals("null")) {
+            return Integer.parseInt(value);
+        }
+        return null;
     }
 
     private void viewAllEcologies() {

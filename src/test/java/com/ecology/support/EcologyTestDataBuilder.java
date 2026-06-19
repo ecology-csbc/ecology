@@ -3,45 +3,54 @@ package com.ecology.support;
 import com.ecology.Ecology;
 
 public final class EcologyTestDataBuilder {
-    private String studentFirstName = "Аліса";
-    private String studentLastName = "Мельник";
-    private String teacherFirstName = "Іван";
-    private String teacherLastName = "Петренко";
-    private String courseName = "Вступ до програмування";
-    private String departmentName = "Комп`ютерні науки";
-    private String roomNumber = "210";
-    private String semester = "Осінь";
-    private String year = "2024";
-    private String startTime = "09:00:00";
-    private String endTime = "10:30:00";
+    private String ecologistName = "Зелена Оксана Вікторівна";
+    private String sensorId = "S-101";
+    private String measurementDate = "2024-09-14";
+    private Double paramPm25 = 18.0;
+    private Double paramNo2 = 32.0;
+    private Double paramPh = 7.1;
+    private String dangerLevel = "Низький";
+    private Double latitude = 50.4501;
+    private Double longitude = 30.5234;
+    private String authorityName = "Київська МДА";
+    private String authorityAddress = "м. Київ, вул. Хрещатик, 36";
+    private String authorityPhone = "380444670001";
+    private Integer ecologistExperience = 6;
 
     public static EcologyTestDataBuilder anEcology() {
         return new EcologyTestDataBuilder();
     }
 
-    public EcologyTestDataBuilder withStudentFirstName(String value) {
-        this.studentFirstName = value;
+    public EcologyTestDataBuilder withEcologistName(String value) {
+        this.ecologistName = value;
         return this;
     }
 
-    public EcologyTestDataBuilder withCourseName(String value) {
-        this.courseName = value;
+    public EcologyTestDataBuilder withSensorId(String value) {
+        this.sensorId = value;
+        return this;
+    }
+
+    public EcologyTestDataBuilder withDangerLevel(String value) {
+        this.dangerLevel = value;
         return this;
     }
 
     public Ecology build() {
         return new Ecology(
-            studentFirstName,
-            studentLastName,
-            teacherFirstName,
-            teacherLastName,
-            courseName,
-            departmentName,
-            roomNumber,
-            semester,
-            year,
-            startTime,
-            endTime
+            ecologistName,
+            sensorId,
+            measurementDate,
+            paramPm25,
+            paramNo2,
+            paramPh,
+            dangerLevel,
+            latitude,
+            longitude,
+            authorityName,
+            authorityAddress,
+            authorityPhone,
+            ecologistExperience
         );
     }
 }

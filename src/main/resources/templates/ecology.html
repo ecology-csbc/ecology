@@ -2,45 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Екологічні записи</title>
+    <title>Екологічний моніторинг</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
-<body class="container mt-4">
-    <h1>Екологічні записи</h1>
+<body class="container-fluid px-4 mt-4">
+    <h1>Екологічні записи (Моніторинг довкілля)</h1>
     <a th:href="@{/add}" class="btn btn-success mb-3">Додати запис</a>
-    <table class="table table-striped table-bordered">
-        <thead class="table-primary">
+    
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-primary text-center">
             <tr>
-                <th>Ім'я студента</th>
-                <th>Прізвище студента</th>
-                <th>Ім'я викладача</th>
-                <th>Прізвище викладача</th>
-                <th>Назва курсу</th>
-                <th>Кафедра</th>
-                <th>Номер аудиторії</th>
-                <th>Семестр</th>
-                <th>Рік</th>
-                <th>Початок заняття</th>
-                <th>Закінчення заняття</th>
+                <th>ПІБ еколога</th>
+                <th>Стаж (років)</th>
+                <th>ID Датчика</th>
+                <th>Дата вимірювання</th>
+                <th>PM2.5</th>
+                <th>NO2</th>
+                <th>pH</th>
+                <th>Рівень небезпеки</th>
+                <th>Широта (Lat)</th>
+                <th>Довгота (Lon)</th>
+                <th>Орган влади</th>
+                <th>Адреса органу</th>
+                <th>Телефон органу</th>
                 <th>Дія</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="ecology : ${ecologies}">
-                <td th:text="${ecology.studentFirstName}"></td>
-                <td th:text="${ecology.studentLastName}"></td>
-                <td th:text="${ecology.teacherFirstName}"></td>
-                <td th:text="${ecology.teacherLastName}"></td>
-                <td th:text="${ecology.courseName}"></td>
-                <td th:text="${ecology.departmentName}"></td>
-                <td th:text="${ecology.roomNumber}"></td>
-                <td th:text="${ecology.semester}"></td>
-                <td th:text="${ecology.year}"></td>
-                <td th:text="${ecology.startTime}"></td>
-                <td th:text="${ecology.endTime}"></td>
-                <td>
-                    <form th:action="@{/delete/{id}(id=${ecology.id})}" method="post">
-                        <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                <td th:text="${ecology.ecologistName}"></td>
+                <td th:text="${ecology.ecologistExperience}" class="text-center"></td>
+                <td th:text="${ecology.sensorId}" class="text-center fw-bold"></td>
+                <td th:text="${ecology.measurementDate}" class="text-center"></td>
+                <td th:text="${ecology.paramPm25}" class="text-center"></td>
+                <td th:text="${ecology.paramNo2}" class="text-center"></td>
+                <td th:text="${ecology.paramPh != null ? ecology.paramPh : '—'}" class="text-center"></td>
+                <td class="text-center">
+                    <span th:text="${ecology.dangerLevel}" 
+                          th:classappend="${ecology.dangerLevel == 'Високий' ? 'badge bg-danger' : 
+                                           ecology.dangerLevel == 'Середній' ? 'badge bg-warning text-dark' : 
+                                           'badge bg-success'}">
+                    </span>
+                </td>
+                <td th:text="${ecology.latitude}"></td>
+                <td th:text="${ecology.longitude}"></td>
+                <td th:text="${ecology.authorityName}"></td>
+                <td th:text="${ecology.authorityAddress}"></td>
+                <td th:text="${ecology.authorityPhone}"></td>
+                <td class="text-center">
+                    <form th:action="@{/delete/{id}(id=${ecology.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Ви впевнені?');">Видалити</button>
                     </form>
                 </td>
             </tr>
